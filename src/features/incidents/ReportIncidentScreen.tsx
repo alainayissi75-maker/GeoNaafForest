@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Alert,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -19,6 +20,13 @@ import type { IncidentType, Severity } from '@/types/domain';
 import { incidentTypeLabels, severityLabels } from '@/utils/format';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ReportIncident'>;
+type FeedbackTone = 'danger' | 'success' | 'warning';
+
+type Feedback = {
+  message: string;
+  title: string;
+  tone: FeedbackTone;
+};
 
 const incidentTypes: IncidentType[] = [
   'wildfire',
@@ -34,16 +42,39 @@ export function ReportIncidentScreen({ navigation }: Props) {
   const [description, setDescription] = useState('');
   const [area, setArea] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
+
+  function showFeedback(
+    title: string,
+    message: string,
+    tone: FeedbackTone,
+    goBack = false,
+  ) {
+    if (Platform.OS === 'web') {
+      setFeedback({ message, title, tone });
+      return;
+    }
+
+    Alert.alert(
+      title,
+      message,
+      goBack
+        ? [{ text: 'Fermer', onPress: () => navigation.goBack() }]
+        : undefined,
+    );
+  }
 
   async function submit() {
     if (title.trim().length < 5 || description.trim().length < 10) {
-      Alert.alert(
+      showFeedback(
         'Informations incomplètes',
         'Ajoutez un titre et une description suffisamment détaillés.',
+        'warning',
       );
       return;
     }
 
+    setFeedback(null);
     setSubmitting(true);
     try {
       await apiRequest('/api/incidents', {
@@ -58,20 +89,25 @@ export function ReportIncidentScreen({ navigation }: Props) {
         }),
         method: 'POST',
       });
-      Alert.alert('Signalement enregistré', 'L’incident a été transmis à l’API.', [
-        { text: 'Fermer', onPress: () => navigation.goBack() },
-      ]);
+      showFeedback(
+        'Signalement enregistré',
+        'L’incident a été transmis à l’API.',
+        'success',
+        true,
+      );
     } catch (error) {
       if (error instanceof ApiConfigurationError) {
-        Alert.alert(
+        showFeedback(
           'Mode démonstration',
           'Le signalement a été validé localement. Configurez EXPO_PUBLIC_API_URL pour le persister.',
-          [{ text: 'Fermer', onPress: () => navigation.goBack() }],
+          'warning',
+          true,
         );
       } else {
-        Alert.alert(
+        showFeedback(
           'Envoi impossible',
           'L’API n’a pas accepté le signalement. Réessayez après vérification de la connexion.',
+          'danger',
         );
       }
     } finally {
@@ -85,6 +121,23 @@ export function ReportIncidentScreen({ navigation }: Props) {
         title="Nouveau signalement"
         subtitle="Décrivez l’événement observé sur le terrain."
       />
+
+      {feedback ? (
+        <View
+          accessibilityRole="alert"
+          style={[
+            styles.feedback,
+            feedback.tone === 'success'
+              ? styles.feedbackSuccess
+              : feedback.tone === 'warning'
+                ? styles.feedbackWarning
+                : styles.feedbackDanger,
+          ]}
+        >
+          <Text style={styles.feedbackTitle}>{feedback.title}</Text>
+          <Text style={styles.feedbackMessage}>{feedback.message}</Text>
+        </View>
+      ) : null}
 
       <FieldLabel label="Type d’incident" />
       <View style={styles.chipGroup}>
@@ -184,6 +237,33 @@ function Chip({
 }
 
 const styles = StyleSheet.create({
+  feedback: {
+    borderRadius: radius.md,
+    borderWidth: 1,
+    gap: spacing.xs,
+    padding: spacing.md,
+  },
+  feedbackSuccess: {
+    backgroundColor: '#E4F3E9',
+    borderColor: colors.success,
+  },
+  feedbackWarning: {
+    backgroundColor: '#FFF0DB',
+    borderColor: colors.warning,
+  },
+  feedbackDanger: {
+    backgroundColor: '#FBE2E0',
+    borderColor: colors.danger,
+  },
+  feedbackTitle: {
+    color: colors.text,
+    fontSize: 14,
+    fontWeight: '900',
+  },
+  feedbackMessage: {
+    color: colors.textMuted,
+    fontSize: 12,
+  },
   label: {
     color: colors.text,
     fontSize: 13,
