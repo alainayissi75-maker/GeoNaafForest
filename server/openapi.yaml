@@ -1,0 +1,159 @@
+openapi: 3.1.0
+info:
+  title: NaafGeoForest API
+  version: 1.0.0
+  description: API métier pour la surveillance forestière et les opérations terrain.
+servers:
+  - url: http://localhost:8787
+paths:
+  /healthz:
+    get:
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service disponible
+  /api/dashboard:
+    get:
+      operationId: getDashboard
+      responses:
+        "200":
+          description: Indicateurs forestiers et opérationnels
+  /api/analytics:
+    get:
+      operationId: getAnalytics
+      responses:
+        "200":
+          description: Indices de végétation, carbone et biomasse
+  /api/operations:
+    get:
+      operationId: getOperations
+      responses:
+        "200":
+          description: Synthèse des drones, capteurs, tâches et interventions
+  /api/drones:
+    get:
+      operationId: listDrones
+      responses:
+        "200":
+          description: Missions et état des drones
+  /api/iot/sensors:
+    get:
+      operationId: listSensors
+      responses:
+        "200":
+          description: Capteurs IoT disponibles
+  /api/tasks:
+    get:
+      operationId: listTasks
+      responses:
+        "200":
+          description: Tâches des équipes terrain
+  /api/interventions:
+    get:
+      operationId: listInterventions
+      responses:
+        "200":
+          description: Interventions et temps de réponse
+  /api/documents:
+    get:
+      operationId: listDocuments
+      responses:
+        "200":
+          description: Rapports, photos et PDF
+  /api/audit:
+    get:
+      operationId: listAuditEvents
+      responses:
+        "200":
+          description: Historique des modifications
+  /api/roles:
+    get:
+      operationId: listRoles
+      responses:
+        "200":
+          description: Rôles métier disponibles
+  /api/integrations:
+    get:
+      operationId: listIntegrations
+      responses:
+        "200":
+          description: État de configuration des connecteurs
+  /api/ai/analyze:
+    post:
+      operationId: analyzeRisk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - prompt
+              properties:
+                prompt:
+                  type: string
+                  minLength: 10
+                provider:
+                  type: string
+                  enum:
+                    - auto
+                    - local
+                    - openai
+                    - gemini
+                  default: auto
+      responses:
+        "200":
+          description: Analyse locale ou fournie par une IA configurée
+        "400":
+          description: Requête invalide
+  /api/incidents:
+    post:
+      operationId: createIncident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - severity
+                - latitude
+                - longitude
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                type:
+                  type: string
+                  enum:
+                    - wildfire
+                    - deforestation
+                    - degradation
+                severity:
+                  type: string
+                  enum:
+                    - low
+                    - medium
+                    - high
+                    - critical
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                areaHectares:
+                  type: number
+                  minimum: 0
+      responses:
+        "201":
+          description: Incident créé
+        "400":
+          description: Données invalides
+  /api/events:
+    get:
+      operationId: subscribeEvents
+      responses:
+        "200":
+          description: Flux Server-Sent Events

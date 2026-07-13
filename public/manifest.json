@@ -1,0 +1,30 @@
+{
+  "short_name": "NaafGeoForest",
+  "name": "NaafGeoForest Intelligence",
+  "description": "Plateforme SIG de surveillance forestière, télédétection et opérations terrain.",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#0B3D2E",
+  "background_color": "#F4F7F3",
+  "categories": [
+    "business",
+    "productivity",
+    "utilities"
+  ]
+}
