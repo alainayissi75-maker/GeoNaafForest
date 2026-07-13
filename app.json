@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "NAAFTrack",
-    "slug": "naaftrack",
+    "name": "NaafGeoForest",
+    "slug": "naafgeoforest",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "naaftrack",
+    "scheme": "naafgeoforest",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.naaftrack.mobile"
+      "bundleIdentifier": "com.naafgeoforest.mobile"
     },
     "android": {
-      "package": "com.naaftrack.mobile",
+      "package": "com.naafgeoforest.mobile",
       "adaptiveIcon": {
         "backgroundColor": "#0B3D2E",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -24,8 +24,8 @@
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png",
-      "name": "NAAFTrack",
-      "shortName": "NAAFTrack"
+      "name": "NaafGeoForest",
+      "shortName": "NaafGeoForest"
     },
     "platforms": [
       "ios",

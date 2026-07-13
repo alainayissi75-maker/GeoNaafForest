@@ -1,6 +1,6 @@
 {
-  "short_name": "NAAFTrack",
-  "name": "NAAFTrack Forest Intelligence",
+  "short_name": "NaafGeoForest",
+  "name": "NaafGeoForest Intelligence",
   "description": "Plateforme SIG de surveillance forestière, télédétection et opérations terrain.",
   "icons": [
     {

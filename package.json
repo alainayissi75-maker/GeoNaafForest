@@ -1,5 +1,5 @@
 {
-  "name": "naaftrack",
+  "name": "naafgeoforest",
   "version": "1.0.0",
   "main": "index.ts",
   "workspaces": [
@@ -37,10 +37,10 @@
     "web": "expo start --web",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "api": "npm --workspace @naaftrack/api run dev",
-    "api:start": "npm --workspace @naaftrack/api run start",
-    "api:typecheck": "npm --workspace @naaftrack/api run typecheck",
-    "api:test": "npm --workspace @naaftrack/api run test",
+    "api": "npm --workspace @naafgeoforest/api run dev",
+    "api:start": "npm --workspace @naafgeoforest/api run start",
+    "api:typecheck": "npm --workspace @naafgeoforest/api run typecheck",
+    "api:test": "npm --workspace @naafgeoforest/api run test",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
     "check": "npm run lint && npm run typecheck && npm run api:typecheck && npm run api:test && expo install --check",

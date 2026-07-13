@@ -1,4 +1,4 @@
-const cacheName = 'naaftrack-shell-v1';
+const cacheName = 'naafgeoforest-shell-v1';
 
 self.addEventListener('install', () => self.skipWaiting());
 

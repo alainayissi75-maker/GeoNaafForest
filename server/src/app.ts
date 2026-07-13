@@ -40,7 +40,7 @@ export async function buildApp() {
   });
 
   app.get('/healthz', async () => ({
-    service: 'naaftrack-api',
+    service: 'naafgeoforest-api',
     status: 'ok',
     time: new Date().toISOString(),
   }));

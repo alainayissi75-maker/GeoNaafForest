@@ -81,7 +81,7 @@ export function MoreScreen() {
     <Screen>
       <PageHeader
         title="Modules"
-        subtitle="Accédez aux outils métier de NAAFTrack."
+        subtitle="Accédez aux outils métier de NaafGeoForest."
       />
 
       <SectionHeader title="Gestion et suivi" />
@@ -116,7 +116,7 @@ export function MoreScreen() {
           <Ionicons name="earth" size={25} color={colors.primary} />
         </View>
         <View style={styles.aboutCopy}>
-          <Text style={styles.aboutTitle}>NAAFTrack Forest Intelligence</Text>
+          <Text style={styles.aboutTitle}>NaafGeoForest Intelligence</Text>
           <Text style={styles.aboutText}>
             Application Expo universelle pour mobile, Web et bureau, connectée
             à une API sécurisée et extensible.

@@ -1,4 +1,4 @@
-# NAAFTrack Forest Intelligence
+# NaafGeoForest Intelligence
 
 Plateforme Expo Universal et API Node.js pour le suivi géospatial des massifs
 forestiers, la télédétection, les opérations terrain et la prévention des

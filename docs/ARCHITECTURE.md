@@ -1,4 +1,4 @@
-# Architecture NAAFTrack Forest Intelligence
+# Architecture NaafGeoForest Intelligence
 
 ## Vue d’ensemble
 

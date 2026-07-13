@@ -92,7 +92,7 @@ function MainTabs() {
         headerShadowVisible: false,
         headerStyle: { backgroundColor: colors.primaryDark },
         headerTintColor: colors.white,
-        headerTitle: 'NAAFTrack Forest Intelligence',
+        headerTitle: 'NaafGeoForest Intelligence',
         headerTitleStyle: { fontSize: 19, fontWeight: '900' },
         tabBarActiveTintColor: colors.primary,
         tabBarHideOnKeyboard: true,
