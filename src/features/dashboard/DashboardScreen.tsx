@@ -34,7 +34,7 @@ export function DashboardScreen() {
     <Screen>
       <PageHeader
         title="Tableau de bord"
-        subtitle="Vue mobile des exploitations et massifs surveillés."
+        subtitle="Vue unifiée des massifs surveillés et opérations terrain."
       />
 
       <View style={styles.demoBanner}>

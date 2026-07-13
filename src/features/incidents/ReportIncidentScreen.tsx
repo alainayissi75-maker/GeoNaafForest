@@ -11,6 +11,10 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { PageHeader, Screen } from '@/components/ui';
 import type { RootStackParamList } from '@/app/AppNavigator';
 import { colors, radius, spacing } from '@/constants/theme';
+import {
+  ApiConfigurationError,
+  apiRequest,
+} from '@/services/api/client';
 import type { IncidentType, Severity } from '@/types/domain';
 import { incidentTypeLabels, severityLabels } from '@/utils/format';
 
@@ -29,8 +33,9 @@ export function ReportIncidentScreen({ navigation }: Props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [area, setArea] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  function submit() {
+  async function submit() {
     if (title.trim().length < 5 || description.trim().length < 10) {
       Alert.alert(
         'Informations incomplètes',
@@ -39,11 +44,39 @@ export function ReportIncidentScreen({ navigation }: Props) {
       return;
     }
 
-    Alert.alert(
-      'Signalement préparé',
-      'Le formulaire mobile est prêt. Configurez EXPO_PUBLIC_API_URL pour enregistrer le signalement sur votre API.',
-      [{ text: 'Fermer', onPress: () => navigation.goBack() }],
-    );
+    setSubmitting(true);
+    try {
+      await apiRequest('/api/incidents', {
+        body: JSON.stringify({
+          areaHectares: area ? Number(area.replace(',', '.')) : undefined,
+          description: description.trim(),
+          latitude: 5.96,
+          longitude: -7.33,
+          severity,
+          title: title.trim(),
+          type,
+        }),
+        method: 'POST',
+      });
+      Alert.alert('Signalement enregistré', 'L’incident a été transmis à l’API.', [
+        { text: 'Fermer', onPress: () => navigation.goBack() },
+      ]);
+    } catch (error) {
+      if (error instanceof ApiConfigurationError) {
+        Alert.alert(
+          'Mode démonstration',
+          'Le signalement a été validé localement. Configurez EXPO_PUBLIC_API_URL pour le persister.',
+          [{ text: 'Fermer', onPress: () => navigation.goBack() }],
+        );
+      } else {
+        Alert.alert(
+          'Envoi impossible',
+          'L’API n’a pas accepté le signalement. Réessayez après vérification de la connexion.',
+        );
+      }
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -109,10 +142,16 @@ export function ReportIncidentScreen({ navigation }: Props) {
 
       <Pressable
         accessibilityRole="button"
+        disabled={submitting}
         onPress={submit}
-        style={styles.submitButton}
+        style={[
+          styles.submitButton,
+          submitting ? styles.submitButtonDisabled : undefined,
+        ]}
       >
-        <Text style={styles.submitText}>Enregistrer le signalement</Text>
+        <Text style={styles.submitText}>
+          {submitting ? 'Envoi en cours…' : 'Enregistrer le signalement'}
+        </Text>
       </Pressable>
     </Screen>
   );
@@ -201,5 +240,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 14,
     fontWeight: '800',
+  },
+  submitButtonDisabled: {
+    opacity: 0.65,
   },
 });

@@ -22,8 +22,16 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png",
+      "name": "NAAFTrack",
+      "shortName": "NAAFTrack"
     },
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "plugins": [
       "react-native-maps",
       "expo-font",

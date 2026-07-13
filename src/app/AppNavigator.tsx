@@ -1,22 +1,27 @@
 import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   DarkTheme,
   NavigationContainer,
   type Theme,
 } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useWindowDimensions } from 'react-native';
+import { colors, spacing } from '@/constants/theme';
 import { AlertsScreen } from '@/features/alerts/AlertsScreen';
+import { AnalyticsScreen } from '@/features/analytics/AnalyticsScreen';
+import { AiAssistantScreen } from '@/features/artificial-intelligence/AiAssistantScreen';
 import { DashboardScreen } from '@/features/dashboard/DashboardScreen';
 import { FarmsScreen } from '@/features/farms/FarmsScreen';
 import { IncidentsScreen } from '@/features/incidents/IncidentsScreen';
 import { ReportIncidentScreen } from '@/features/incidents/ReportIncidentScreen';
+import { IntegrationsScreen } from '@/features/integrations/IntegrationsScreen';
 import { MapScreen } from '@/features/map/MapScreen';
 import { MoreScreen } from '@/features/more/MoreScreen';
+import { OperationsScreen } from '@/features/operations/OperationsScreen';
 import { ParcelsScreen } from '@/features/parcels/ParcelsScreen';
 import { SurveillanceScreen } from '@/features/surveillance/SurveillanceScreen';
 import { WeatherScreen } from '@/features/weather/WeatherScreen';
-import { colors } from '@/constants/theme';
 
 export type RootStackParamList = {
   MainTabs: undefined;
@@ -26,12 +31,16 @@ export type RootStackParamList = {
   Surveillance: undefined;
   Incidents: undefined;
   ReportIncident: undefined;
+  Alerts: undefined;
+  AiAssistant: undefined;
+  Integrations: undefined;
 };
 
 type MainTabParamList = {
   Dashboard: undefined;
   Map: undefined;
-  Alerts: undefined;
+  Analytics: undefined;
+  Operations: undefined;
   More: undefined;
 };
 
@@ -54,41 +63,39 @@ const navigationTheme: Theme = {
 const tabLabels: Record<keyof MainTabParamList, string> = {
   Dashboard: 'Accueil',
   Map: 'Carte',
-  Alerts: 'Alertes',
+  Analytics: 'Analyses',
+  Operations: 'Opérations',
   More: 'Plus',
 };
 
 const tabIcons: Record<
   keyof MainTabParamList,
-  { active: keyof typeof Ionicons.glyphMap; inactive: keyof typeof Ionicons.glyphMap }
+  {
+    active: keyof typeof Ionicons.glyphMap;
+    inactive: keyof typeof Ionicons.glyphMap;
+  }
 > = {
   Dashboard: { active: 'grid', inactive: 'grid-outline' },
   Map: { active: 'map', inactive: 'map-outline' },
-  Alerts: { active: 'notifications', inactive: 'notifications-outline' },
+  Analytics: { active: 'analytics', inactive: 'analytics-outline' },
+  Operations: { active: 'radio', inactive: 'radio-outline' },
   More: { active: 'apps', inactive: 'apps-outline' },
 };
 
 function MainTabs() {
+  const { width } = useWindowDimensions();
+  const desktop = width >= 1024;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerStyle: { backgroundColor: colors.primaryDark },
         headerShadowVisible: false,
+        headerStyle: { backgroundColor: colors.primaryDark },
         headerTintColor: colors.white,
-        headerTitle: 'NAAFTrack',
+        headerTitle: 'NAAFTrack Forest Intelligence',
         headerTitleStyle: { fontSize: 19, fontWeight: '900' },
         tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
         tabBarHideOnKeyboard: true,
-        tabBarLabel: tabLabels[route.name],
-        tabBarLabelStyle: { fontSize: 10, fontWeight: '700' },
-        tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopColor: colors.border,
-          height: 64,
-          paddingBottom: 7,
-          paddingTop: 7,
-        },
         tabBarIcon: ({ color, focused, size }) => (
           <Ionicons
             color={color}
@@ -100,11 +107,29 @@ function MainTabs() {
             size={size}
           />
         ),
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarLabel: tabLabels[route.name],
+        tabBarLabelPosition: desktop ? 'beside-icon' : 'below-icon',
+        tabBarLabelStyle: {
+          fontSize: desktop ? 13 : 10,
+          fontWeight: '700',
+        },
+        tabBarPosition: desktop ? 'left' : 'bottom',
+        tabBarStyle: {
+          backgroundColor: colors.white,
+          borderColor: colors.border,
+          height: desktop ? undefined : 64,
+          paddingBottom: desktop ? spacing.md : 7,
+          paddingTop: desktop ? spacing.xl : 7,
+          width: desktop ? 230 : undefined,
+        },
+        tabBarVariant: desktop ? 'material' : 'uikit',
       })}
     >
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Map" component={MapScreen} />
-      <Tab.Screen name="Alerts" component={AlertsScreen} />
+      <Tab.Screen name="Analytics" component={AnalyticsScreen} />
+      <Tab.Screen name="Operations" component={OperationsScreen} />
       <Tab.Screen name="More" component={MoreScreen} />
     </Tab.Navigator>
   );
@@ -116,8 +141,8 @@ export function AppNavigator() {
       <RootStack.Navigator
         screenOptions={{
           contentStyle: { backgroundColor: colors.background },
-          headerStyle: { backgroundColor: colors.primaryDark },
           headerShadowVisible: false,
+          headerStyle: { backgroundColor: colors.primaryDark },
           headerTintColor: colors.white,
           headerTitleStyle: { fontWeight: '800' },
         }}
@@ -156,6 +181,21 @@ export function AppNavigator() {
           name="ReportIncident"
           component={ReportIncidentScreen}
           options={{ title: 'Nouveau signalement' }}
+        />
+        <RootStack.Screen
+          name="Alerts"
+          component={AlertsScreen}
+          options={{ title: 'Alertes' }}
+        />
+        <RootStack.Screen
+          name="AiAssistant"
+          component={AiAssistantScreen}
+          options={{ title: 'Intelligence artificielle' }}
+        />
+        <RootStack.Screen
+          name="Integrations"
+          component={IntegrationsScreen}
+          options={{ title: 'Intégrations' }}
         />
       </RootStack.Navigator>
     </NavigationContainer>

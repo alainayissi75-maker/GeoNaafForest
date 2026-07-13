@@ -1,85 +1,113 @@
-# Architecture NAAFTrack Mobile
+# Architecture NAAFTrack Forest Intelligence
 
 ## Vue d’ensemble
 
-L’application mobile est autonome et le serveur métier reste un service séparé. Cette séparation évite d’embarquer Express, PostgreSQL ou Drizzle dans le bundle mobile.
+Le dépôt contient un client Expo Universal et une API Node.js. Le client cible
+Android, iOS et le Web ; le Web responsive peut être installé comme application
+de bureau grâce au manifeste PWA. Les secrets et appels fournisseurs restent
+dans l’API.
 
 ```text
 src/
-├── app/
-│   └── AppNavigator.tsx
+├── app/                      # navigation mobile et bureau
 ├── components/
-│   └── ui.tsx
+│   └── ui.tsx                # primitives visuelles partagées
 ├── constants/
 │   └── theme.ts
 ├── data/
-│   └── demoData.ts
+│   ├── demoData.ts
+│   └── platformData.ts
 ├── features/
-│   ├── alerts/
-│   ├── dashboard/
-│   ├── farms/
-│   ├── incidents/
-│   ├── map/
-│   ├── more/
-│   ├── parcels/
-│   ├── surveillance/
-│   └── weather/
+│   ├── analytics/            # indices, carbone et biomasse
+│   ├── artificial-intelligence/
+│   ├── integrations/
+│   ├── map/                  # implémentations native et Web
+│   └── operations/           # drones, IoT, équipes et audit
 ├── services/
+│   ├── ai/
 │   └── api/
 ├── types/
-│   └── domain.ts
-└── utils/
-    └── format.ts
+│   ├── domain.ts
+│   └── platform.ts
+server/
+├── src/
+│   ├── providers/            # OpenAI et Gemini
+│   ├── services/             # risque local et registre fournisseurs
+│   ├── app.ts
+│   └── index.ts
+└── openapi.yaml
+public/
+├── manifest.json
+├── service-worker.js
+└── index.html
 ```
 
 ## Navigation
 
-La navigation principale utilise quatre onglets adaptés aux petits écrans :
+La navigation principale utilise cinq onglets :
 
 1. Accueil ;
 2. Carte ;
-3. Alertes ;
-4. Plus.
+3. Analyses ;
+4. Opérations ;
+5. Plus.
 
-Les modules Exploitations, Parcelles, Météo, Surveillance et Incidents sont ouverts dans une pile native depuis l’onglet Plus.
+Sur les écrans de bureau, les onglets deviennent automatiquement une barre
+latérale. Les modules spécialisés sont ouverts dans une pile partagée.
 
 ## Cartographie
 
-`react-native-maps` remplace les bibliothèques cartographiques DOM. Les entités utilisent les primitives natives suivantes :
+La couche cartographique possède deux implémentations derrière la même
+interface :
 
-- `MapView` pour la carte ;
-- `Polygon` pour les limites des parcelles et zones ;
-- `Marker` pour les incidents.
+- Android/iOS : `react-native-maps` ;
+- Web/desktop : MapLibre GL avec `react-map-gl`.
 
-Le dessin interactif de polygones doit être ajouté comme module mobile spécifique, puis envoyer des coordonnées GeoJSON à l’API.
+Les fonds disponibles sont standard, satellite, hybride et terrain. Les
+sources publiques conservent obligatoirement leur attribution. Les couches
+métier incluent les forêts, parcelles, incidents, drones et capteurs.
 
 ## Données
 
-`src/data/demoData.ts` fournit un mode de démonstration local immédiatement exécutable. Les modèles de domaine sont séparés dans `src/types/domain.ts` afin de pouvoir remplacer progressivement ces données par des appels réseau.
+`src/data` fournit un mode de démonstration immédiatement exécutable. Les
+écrans indiquent ce mode et le serveur retourne `mode: demo` pour les métriques
+non connectées à une source réelle.
 
-Le client `src/services/api/client.ts` utilise `EXPO_PUBLIC_API_URL`. Les routes métier prévues sont :
+Le client `src/services/api/client.ts` utilise `EXPO_PUBLIC_API_URL`. L’API
+expose notamment :
 
 ```text
-/farms
-/parcels
-/parcels/:id/indices
-/weather
-/surveillance-zones
-/incidents
-/alerts
-/stats/summary
-/stats/timeline
+/api/dashboard
+/api/analytics
+/api/operations
+/api/drones
+/api/iot/sensors
+/api/tasks
+/api/interventions
+/api/documents
+/api/audit
+/api/integrations
+/api/ai/analyze
+/api/events
 ```
 
-## Authentification
+## Intelligence artificielle
 
-L’application ne dépend d’aucun fournisseur d’identité particulier. Une intégration future peut utiliser Expo AuthSession avec un serveur OIDC configurable. Les jetons devront être stockés dans Expo SecureStore et injectés dans le client HTTP.
+L’API choisit le premier fournisseur configuré entre OpenAI et Gemini. En
+l’absence de clé, le moteur local classe les signaux textuels et produit des
+recommandations. Un fournisseur demandé mais absent est signalé par
+`configuration: not_configured`.
 
-## Évolution recommandée
+## Sécurité et permissions
 
-1. Connecter les écrans de lecture à l’API.
-2. Persister les signalements d’incidents.
-3. Ajouter la localisation terrain et la capture photo.
-4. Ajouter le dessin et l’édition de parcelles.
-5. Générer les types TypeScript depuis le contrat OpenAPI.
-6. Ajouter les tests unitaires et les tests E2E.
+Les rôles métier sont définis par l’API. La prochaine étape de production est
+d’ajouter un fournisseur OIDC générique, des jetons courts, une matrice RBAC et
+une base PostgreSQL/PostGIS. Les secrets ne sont jamais accessibles par
+`EXPO_PUBLIC_*`.
+
+## Persistance
+
+La version actuelle expose un socle API fonctionnel avec données de
+démonstration en mémoire. Pour la production, les interfaces doivent être
+branchées sur PostgreSQL/PostGIS, un stockage objet compatible S3 et une file de
+travaux pour les calculs satellite.

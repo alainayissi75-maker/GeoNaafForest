@@ -202,8 +202,9 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   statCard: {
+    flexBasis: '30%',
     flex: 1,
-    minWidth: '46%',
+    minWidth: 145,
     gap: spacing.xs,
   },
   statIcon: {

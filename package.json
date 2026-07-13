@@ -2,7 +2,11 @@
   "name": "naaftrack",
   "version": "1.0.0",
   "main": "index.ts",
+  "workspaces": [
+    "server"
+  ],
   "dependencies": {
+    "@expo/metro-runtime": "~57.0.3",
     "@expo/vector-icons": "15.1.1",
     "@react-navigation/bottom-tabs": "7.18.3",
     "@react-navigation/elements": "2.9.26",
@@ -12,11 +16,15 @@
     "expo-font": "~57.0.0",
     "expo-splash-screen": "~57.0.2",
     "expo-status-bar": "~57.0.0",
+    "maplibre-gl": "5.24.0",
     "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-map-gl": "8.1.1",
     "react-native": "0.86.0",
     "react-native-maps": "1.27.2",
     "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "4.25.2"
+    "react-native-screens": "4.25.2",
+    "react-native-web": "0.21.2"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
@@ -26,11 +34,18 @@
   },
   "scripts": {
     "start": "expo start",
+    "web": "expo start --web",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "api": "npm --workspace @naaftrack/api run dev",
+    "api:start": "npm --workspace @naaftrack/api run start",
+    "api:typecheck": "npm --workspace @naaftrack/api run typecheck",
+    "api:test": "npm --workspace @naaftrack/api run test",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "check": "npm run lint && npm run typecheck && expo install --check"
+    "check": "npm run lint && npm run typecheck && npm run api:typecheck && npm run api:test && expo install --check",
+    "export:web": "expo export --platform web",
+    "export:android": "expo export --platform android"
   },
   "overrides": {
     "@react-navigation/elements": "2.9.26"

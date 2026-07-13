@@ -17,6 +17,27 @@ const menuItems: {
   color: string;
 }[] = [
   {
+    route: 'AiAssistant',
+    title: 'Intelligence artificielle',
+    description: 'Anomalies, synthèses et prévision des risques',
+    icon: 'sparkles',
+    color: colors.purple,
+  },
+  {
+    route: 'Integrations',
+    title: 'Intégrations',
+    description: 'Sentinel Hub, GFW, FIRMS, Copernicus et IA',
+    icon: 'git-network',
+    color: colors.info,
+  },
+  {
+    route: 'Alerts',
+    title: 'Alertes',
+    description: 'SMS, email, push et accusés de réception',
+    icon: 'notifications',
+    color: colors.danger,
+  },
+  {
     route: 'Farms',
     title: 'Exploitations',
     description: 'Coopératives et domaines agricoles',
@@ -95,10 +116,10 @@ export function MoreScreen() {
           <Ionicons name="earth" size={25} color={colors.primary} />
         </View>
         <View style={styles.aboutCopy}>
-          <Text style={styles.aboutTitle}>NAAFTrack Mobile</Text>
+          <Text style={styles.aboutTitle}>NAAFTrack Forest Intelligence</Text>
           <Text style={styles.aboutText}>
-            Architecture Expo indépendante, prête à se connecter à une API
-            déployée séparément.
+            Application Expo universelle pour mobile, Web et bureau, connectée
+            à une API sécurisée et extensible.
           </Text>
         </View>
       </View>

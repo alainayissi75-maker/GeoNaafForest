@@ -1,10 +1,13 @@
-import type { LatLng } from 'react-native-maps';
-
 export type Severity = 'low' | 'medium' | 'high' | 'critical';
 export type IncidentType = 'wildfire' | 'deforestation' | 'degradation';
 export type IncidentStatus = 'active' | 'monitoring' | 'resolved';
 export type HealthStatus = 'good' | 'moderate' | 'stressed' | 'critical';
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
+
+export interface Coordinate {
+  latitude: number;
+  longitude: number;
+}
 
 export interface TimelinePoint {
   label: string;
@@ -18,7 +21,7 @@ export interface Incident {
   description: string;
   severity: Severity;
   status: IncidentStatus;
-  coordinate: LatLng;
+  coordinate: Coordinate;
   areaHectares: number;
   zoneName: string;
   reportedAt: string;
@@ -42,8 +45,8 @@ export interface SurveillanceZone {
   affectedAreaHectares: number;
   riskLevel: RiskLevel;
   activeIncidents: number;
-  coordinate: LatLng;
-  boundary: LatLng[];
+  coordinate: Coordinate;
+  boundary: Coordinate[];
 }
 
 export interface Farm {
@@ -53,7 +56,7 @@ export interface Farm {
   primaryCulture: string;
   totalAreaHectares: number;
   parcelCount: number;
-  coordinate: LatLng;
+  coordinate: Coordinate;
 }
 
 export interface Parcel {
@@ -65,7 +68,7 @@ export interface Parcel {
   latestNdvi: number;
   healthStatus: HealthStatus;
   sowingDate: string;
-  boundary: LatLng[];
+  boundary: Coordinate[];
 }
 
 export interface WeatherDay {
